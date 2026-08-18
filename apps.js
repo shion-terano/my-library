@@ -946,12 +946,11 @@ async function fetchBookFromNDL(
 ) {
 
     const cleanISBN =
-        String(
-            isbn
-        ).replace(
-            /[^0-9Xx]/g,
-            ""
-        );
+        String(isbn)
+            .replace(
+                /[^0-9Xx]/g,
+                ""
+            );
 
 
     if (!cleanISBN) {
@@ -1026,25 +1025,29 @@ async function fetchBookFromNDL(
         }
 
 
+        /* =================================================
+           タイトル
+           ================================================= */
+
         const title =
-            getElementText(
-                item,
-                "title"
+            getNDLDisplayTitle(
+                item
             );
 
 
-        const edition =
-            getNamespacedText(
-                item,
-                "edition"
-            );
-
+        /* =================================================
+           著者・編者
+           ================================================= */
 
         const author =
             getAuthorEditorText(
                 item
             );
 
+
+        /* =================================================
+           出版社
+           ================================================= */
 
         const publisher =
             getNamespacedText(
@@ -1053,12 +1056,20 @@ async function fetchBookFromNDL(
             );
 
 
+        /* =================================================
+           出版年
+           ================================================= */
+
         const date =
             getNamespacedText(
                 item,
                 "date"
             );
 
+
+        /* =================================================
+           フォームへ入力
+           ================================================= */
 
         document.getElementById(
             "isbn"
@@ -1069,19 +1080,7 @@ async function fetchBookFromNDL(
         document.getElementById(
             "title"
         ).value =
-            cleanText(
-                title
-            ) +
-            (
-                edition
-                    ?
-                    " " +
-                    cleanText(
-                        edition
-                    )
-                    :
-                    ""
-            );
+            title;
 
 
         document.getElementById(
@@ -1113,10 +1112,12 @@ async function fetchBookFromNDL(
             error
         );
 
+
         alert(
             "書誌情報の取得に失敗しました。\n\n" +
             "ISBNを確認して、必要なら手入力してください。"
         );
+
 
     } finally {
 
@@ -1125,6 +1126,366 @@ async function fetchBookFromNDL(
         );
 
     }
+
+}
+
+
+/* =========================================================
+   NDL表示用タイトル
+========================================================= */
+
+function getNDLDisplayTitle(
+    item
+) {
+
+    /*
+     * NDLの検索結果では、
+     *
+     * ・タイトル
+     * ・巻次
+     * ・版
+     * ・シリーズ名
+     * ・各巻タイトル
+     *
+     * などを組み合わせて表示することがあります。
+     *
+     * OpenSearchのdescriptionにも
+     * 「タイトル：」
+     * 「シリーズ名：」
+     * 「版：」
+     * などの情報が含まれるため、
+     * そこから取得します。
+     */
+
+
+    const description =
+        getElementText(
+            item,
+            "description"
+        );
+
+
+    /*
+     * まずXMLの<title>を取得
+     */
+
+    let title =
+        cleanText(
+            getElementText(
+                item,
+                "title"
+            )
+        );
+
+
+    /*
+     * descriptionから
+     * 「タイトル：」を探す
+     */
+
+    const descriptionTitle =
+        extractNDLDescriptionField(
+            description,
+            "タイトル"
+        );
+
+
+    if (
+        descriptionTitle
+    ) {
+
+        title =
+            cleanText(
+                descriptionTitle
+            );
+
+    }
+
+
+    /*
+     * 版情報
+     *
+     * 例：
+     * 改訂新版
+     * 第2版
+     */
+
+    const edition =
+        getNamespacedText(
+            item,
+            "edition"
+        );
+
+
+    /*
+     * シリーズ名
+     */
+
+    const series =
+        extractNDLDescriptionField(
+            description,
+            "シリーズ名"
+        );
+
+
+    /*
+     * 巻次
+     */
+
+    const volume =
+        extractNDLDescriptionField(
+            description,
+            "巻次"
+        );
+
+
+    /*
+     * 各巻タイトル
+     */
+
+    const volumeTitle =
+        extractNDLDescriptionField(
+            description,
+            "各巻タイトル"
+        );
+
+
+    /*
+     * タイトルを組み立てる
+     */
+
+    const parts = [];
+
+
+    /*
+     * 基本タイトル
+     */
+
+    if (title) {
+
+        parts.push(
+            title
+        );
+
+    }
+
+
+    /*
+     * 各巻タイトル
+     */
+
+    if (
+        volumeTitle &&
+        !title.includes(
+            volumeTitle
+        )
+    ) {
+
+        parts.push(
+            volumeTitle
+        );
+
+    }
+
+
+    /*
+     * 巻次
+     */
+
+    if (volume) {
+
+        parts.push(
+            volume
+        );
+
+    }
+
+
+    /*
+     * 版情報
+     */
+
+    if (edition) {
+
+        parts.push(
+            cleanText(
+                edition
+            )
+        );
+
+    }
+
+
+    /*
+     * シリーズ名
+     *
+     * NDL検索結果に近づけるため
+     * 括弧で追加
+     */
+
+    if (series) {
+
+        const seriesText =
+            cleanText(
+                series
+            );
+
+
+        if (
+            seriesText &&
+            !title.includes(
+                seriesText
+            )
+        ) {
+
+            parts.push(
+                "(" +
+                seriesText +
+                ")"
+            );
+
+        }
+
+    }
+
+
+    /*
+     * 重複を削除
+     */
+
+    const uniqueParts =
+        parts.filter(
+            (
+                value,
+                index,
+                array
+            ) =>
+                value &&
+                array.indexOf(
+                    value
+                ) === index
+        );
+
+
+    return cleanText(
+        uniqueParts.join(
+            " "
+        )
+    );
+
+}
+
+
+/* =========================================================
+   NDL descriptionから項目を取得
+========================================================= */
+
+function extractNDLDescriptionField(
+    description,
+    fieldName
+) {
+
+    if (!description) {
+
+        return "";
+
+    }
+
+
+    /*
+     * HTMLタグを除去
+     */
+
+    const text =
+        String(
+            description
+        )
+            .replace(
+                /<[^>]*>/g,
+                " "
+            );
+
+
+    /*
+     * HTMLエンティティを簡易的に戻す
+     */
+
+    const decoded =
+        text
+            .replace(
+                /&amp;/g,
+                "&"
+            )
+            .replace(
+                /&lt;/g,
+                "<"
+            )
+            .replace(
+                /&gt;/g,
+                ">"
+            )
+            .replace(
+                /&quot;/g,
+                '"'
+            );
+
+
+    /*
+     * 例：
+     *
+     * タイトル：統計学が最強の学問である :
+     * データ社会を生き抜くための武器と教養
+     *
+     * シリーズ名：放送大学教材
+     */
+
+
+    const escapedField =
+        fieldName.replace(
+            /[.*+?^${}()|[\]\\]/g,
+            "\\$&"
+        );
+
+
+    const regex =
+        new RegExp(
+            escapedField +
+            "\\s*：\\s*" +
+            "(.+?)(?=" +
+            "タイトル：|" +
+            "タイトル（読み）：|" +
+            "責任表示：|" +
+            "シリーズ名：|" +
+            "シリーズ名（読み）：|" +
+            "巻次：|" +
+            "各巻タイトル：|" +
+            "版：|" +
+            "出版地：|" +
+            "出版者：|" +
+            "出版年月：|" +
+            "NDC|" +
+            "$" +
+            ")",
+            "u"
+        );
+
+
+    const match =
+        decoded.match(
+            regex
+        );
+
+
+    if (!match) {
+
+        return "";
+
+    }
+
+
+    return cleanText(
+        match[1]
+    );
 
 }
 
