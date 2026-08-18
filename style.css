@@ -1,0 +1,899 @@
+/* =========================================================
+   基本
+========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+
+    margin: 0;
+
+    background:
+        linear-gradient(
+            135deg,
+            #fff7fb,
+            #f4f8ff
+        );
+
+    color: #333;
+
+    font-family:
+        "Yu Gothic",
+        "游ゴシック",
+        sans-serif;
+
+    min-height: 100vh;
+
+}
+
+
+/* =========================================================
+   ヘッダー
+========================================================= */
+
+.app-header {
+
+    padding:
+        24px
+        20px
+        12px;
+
+    text-align: center;
+
+}
+
+.app-header h1 {
+
+    margin: 0;
+
+    font-size: 28px;
+
+    font-weight: bold;
+
+    letter-spacing: .08em;
+
+}
+
+.subtitle {
+
+    margin: 4px 0 0;
+
+    font-size: 12px;
+
+    color: #999;
+
+    letter-spacing: .15em;
+
+}
+
+
+/* =========================================================
+   メイン
+========================================================= */
+
+.container {
+
+    width: min(
+        900px,
+        calc(100% - 30px)
+    );
+
+    margin:
+        0 auto
+        100px;
+
+}
+
+
+/* =========================================================
+   検索
+========================================================= */
+
+.search-area {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin:
+        10px 0
+        8px;
+
+}
+
+.search-area input {
+
+    flex: 1;
+
+}
+
+.search-area select {
+
+    width: 180px;
+
+}
+
+input,
+select {
+
+    border:
+        1px solid #ddd;
+
+    border-radius:
+        10px;
+
+    padding:
+        12px;
+
+    background: white;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+}
+
+input:focus,
+select:focus {
+
+    border-color: #b8a4d8;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(184,164,216,.15);
+
+}
+
+
+/* =========================================================
+   同期
+========================================================= */
+
+.sync-area {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+
+    margin:
+        8px 0
+        18px;
+
+}
+
+.sync-button {
+
+    border: none;
+
+    border-radius: 20px;
+
+    padding:
+        7px 15px;
+
+    background: #eee8f8;
+
+    color: #6c5887;
+
+    cursor: pointer;
+
+}
+
+#syncStatus {
+
+    font-size: 12px;
+
+    color: #999;
+
+}
+
+
+/* =========================================================
+   本カード
+========================================================= */
+
+.book-card {
+
+    display: flex;
+
+    gap: 18px;
+
+    background: rgba(
+        255,
+        255,
+        255,
+        .92
+    );
+
+    border-radius: 16px;
+
+    padding: 16px;
+
+    margin-bottom: 12px;
+
+    box-shadow:
+        0 4px 16px
+        rgba(80,60,100,.08);
+
+    cursor: pointer;
+
+    transition:
+        transform .15s,
+        box-shadow .15s;
+
+}
+
+.book-card:hover {
+
+    transform:
+        translateY(-2px);
+
+    box-shadow:
+        0 7px 20px
+        rgba(80,60,100,.13);
+
+}
+
+.book-cover {
+
+    width: 85px;
+
+    min-width: 85px;
+
+    height: 120px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #f1eef5;
+
+    border-radius: 8px;
+
+    overflow: hidden;
+
+}
+
+.book-cover img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+.no-cover {
+
+    font-size: 11px;
+
+    color: #aaa;
+
+    text-align: center;
+
+}
+
+.book-info {
+
+    flex: 1;
+
+    min-width: 0;
+
+}
+
+.book-title {
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    margin-bottom: 9px;
+
+    line-height: 1.45;
+
+}
+
+.book-meta {
+
+    font-size: 13px;
+
+    color: #666;
+
+    margin-bottom: 4px;
+
+    line-height: 1.5;
+
+}
+
+.book-label {
+
+    display: inline-block;
+
+    margin-top: 7px;
+
+    padding:
+        4px 10px;
+
+    border-radius: 20px;
+
+    background: #f2e8f8;
+
+    color: #74558d;
+
+    font-size: 11px;
+
+}
+
+
+/* =========================================================
+   空表示
+========================================================= */
+
+.empty-message {
+
+    text-align: center;
+
+    color: #aaa;
+
+    padding: 60px 0;
+
+}
+
+
+/* =========================================================
+   ＋ボタン
+========================================================= */
+
+.floating-button {
+
+    position: fixed;
+
+    right: 25px;
+
+    bottom: 25px;
+
+    width: 62px;
+
+    height: 62px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #d8b7ef,
+            #a9c8f5
+        );
+
+    color: white;
+
+    font-size: 34px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 7px 20px
+        rgba(100,80,130,.25);
+
+}
+
+
+/* =========================================================
+   モーダル
+========================================================= */
+
+.modal {
+
+    position: fixed;
+
+    inset: 0;
+
+    background:
+        rgba(
+            30,
+            25,
+            40,
+            .55
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 18px;
+
+    z-index: 1000;
+
+}
+
+.hidden {
+
+    display: none !important;
+
+}
+
+.modal-content {
+
+    position: relative;
+
+    width: min(
+        520px,
+        100%
+    );
+
+    max-height:
+        90vh;
+
+    overflow-y: auto;
+
+    background: white;
+
+    border-radius: 20px;
+
+    padding: 28px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.2);
+
+}
+
+.modal-content.small {
+
+    width: min(
+        380px,
+        100%
+    );
+
+}
+
+.modal-content h2 {
+
+    margin:
+        0 0 20px;
+
+}
+
+.modal-close {
+
+    position: absolute;
+
+    top: 12px;
+
+    right: 15px;
+
+    width: 35px;
+
+    height: 35px;
+
+    border: none;
+
+    background: transparent;
+
+    font-size: 25px;
+
+    color: #888;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   選択ボタン
+========================================================= */
+
+.choice-button {
+
+    width: 100%;
+
+    padding: 16px;
+
+    margin-bottom: 12px;
+
+    border:
+        1px solid #e5dcef;
+
+    border-radius: 12px;
+
+    background: #faf8fd;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+.choice-button:hover {
+
+    background: #f3ecfa;
+
+}
+
+
+/* =========================================================
+   フォーム
+========================================================= */
+
+#bookForm label {
+
+    display: block;
+
+    margin-bottom: 14px;
+
+    font-size: 13px;
+
+    color: #666;
+
+}
+
+#bookForm input,
+#bookForm select {
+
+    display: block;
+
+    width: 100%;
+
+    margin-top: 6px;
+
+}
+
+.new-label-area {
+
+    display: flex;
+
+    gap: 8px;
+
+    margin-bottom: 18px;
+
+}
+
+.new-label-area input {
+
+    flex: 1;
+
+}
+
+.new-label-area button {
+
+    border: none;
+
+    border-radius: 10px;
+
+    padding:
+        0 15px;
+
+    background: #eee8f8;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   ボタン
+========================================================= */
+
+.primary-button {
+
+    width: 100%;
+
+    padding: 13px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #b993d6,
+            #8caee8
+        );
+
+    color: white;
+
+    font-family: inherit;
+
+    font-size: 15px;
+
+    cursor: pointer;
+
+}
+
+.detail-buttons {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 25px;
+
+}
+
+.detail-buttons button {
+
+    flex: 1;
+
+    padding: 12px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    background: #eee;
+
+    cursor: pointer;
+
+}
+
+.danger-button {
+
+    background: #f7dddd !important;
+
+    color: #a44 !important;
+
+}
+
+
+/* =========================================================
+   詳細
+========================================================= */
+
+.detail-book {
+
+    display: flex;
+
+    gap: 20px;
+
+}
+
+.detail-cover {
+
+    width: 120px;
+
+    min-width: 120px;
+
+    height: 170px;
+
+    background: #f1eef5;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+}
+
+.detail-cover img {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+.detail-info {
+
+    flex: 1;
+
+}
+
+.detail-title {
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    margin-bottom: 20px;
+
+    line-height: 1.5;
+
+}
+
+.detail-row {
+
+    margin-bottom: 10px;
+
+    font-size: 13px;
+
+    line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   ラベル管理
+========================================================= */
+
+.label-manager-row {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding:
+        12px 0;
+
+    border-bottom:
+        1px solid #eee;
+
+}
+
+.label-manager-row button {
+
+    border: none;
+
+    border-radius: 8px;
+
+    padding:
+        6px 12px;
+
+    cursor: pointer;
+
+}
+
+
+/* =========================================================
+   スキャナー
+========================================================= */
+
+.scanner-content {
+
+    text-align: center;
+
+}
+
+#scannerMessage {
+
+    color: #777;
+
+    font-size: 13px;
+
+}
+
+.scanner-frame {
+
+    position: relative;
+
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    background: #111;
+
+    border-radius: 14px;
+
+    overflow: hidden;
+
+}
+
+#scannerVideo {
+
+    width: 100%;
+
+    height: 100%;
+
+    object-fit: cover;
+
+}
+
+.scanner-line {
+
+    position: absolute;
+
+    left: 5%;
+
+    right: 5%;
+
+    top: 50%;
+
+    height: 2px;
+
+    background: #68e59b;
+
+    box-shadow:
+        0 0 8px
+        #68e59b;
+
+}
+
+
+/* =========================================================
+   スマホ
+========================================================= */
+
+@media (
+    max-width: 600px
+) {
+
+    .app-header {
+
+        padding-top: 18px;
+
+    }
+
+    .app-header h1 {
+
+        font-size: 23px;
+
+    }
+
+    .search-area {
+
+        flex-direction: column;
+
+    }
+
+    .search-area select {
+
+        width: 100%;
+
+    }
+
+    .book-card {
+
+        gap: 12px;
+
+        padding: 12px;
+
+    }
+
+    .book-cover {
+
+        width: 70px;
+
+        min-width: 70px;
+
+        height: 100px;
+
+    }
+
+    .book-title {
+
+        font-size: 15px;
+
+    }
+
+    .book-meta {
+
+        font-size: 11px;
+
+    }
+
+    .detail-book {
+
+        flex-direction: column;
+
+        align-items: center;
+
+    }
+
+}

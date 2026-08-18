@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+
+<title>私の蔵書</title>
+
+<link
+    rel="stylesheet"
+    href="style.css"
+>
+
+</head>
+
+
+<body>
+
+
+<header class="app-header">
+
+    <div>
+
+        <h1>私の蔵書</h1>
+
+        <p class="subtitle">
+            My Library
+        </p>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+
+    <!-- 検索 -->
+
+    <div class="search-area">
+
+        <input
+            id="searchInput"
+            type="search"
+            placeholder="🔍 本を検索"
+        >
+
+        <select id="labelFilter">
+
+            <option value="">
+                すべてのラベル
+            </option>
+
+        </select>
+
+    </div>
+
+
+    <!-- 同期 -->
+
+    <div class="sync-area">
+
+        <button
+            id="syncButton"
+            type="button"
+            class="sync-button"
+        >
+            ↻ データを同期
+        </button>
+
+        <span id="syncStatus"></span>
+
+    </div>
+
+
+    <!-- 本一覧 -->
+
+    <section id="bookList">
+
+    </section>
+
+
+</main>
+
+
+<!-- ＋ボタン -->
+
+<button
+    id="addButton"
+    class="floating-button"
+    type="button"
+    aria-label="本を追加"
+>
+    ＋
+</button>
+
+
+<!-- =====================================================
+     追加方法選択
+===================================================== -->
+
+<div
+    id="addChoiceModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content small">
+
+        <button
+            class="modal-close"
+            data-close="addChoiceModal"
+        >
+            ×
+        </button>
+
+        <h2>本を追加</h2>
+
+        <button
+            id="barcodeChoice"
+            class="choice-button"
+            type="button"
+        >
+            📷 バーコードから登録
+        </button>
+
+        <button
+            id="manualChoice"
+            class="choice-button"
+            type="button"
+        >
+            ✏️ 手入力で登録
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     本登録
+===================================================== -->
+
+<div
+    id="bookModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            data-close="bookModal"
+        >
+            ×
+        </button>
+
+        <h2 id="bookModalTitle">
+            本を登録
+        </h2>
+
+
+        <form id="bookForm">
+
+
+            <label>
+
+                ISBN
+
+                <input
+                    id="isbn"
+                    type="text"
+                    autocomplete="off"
+                >
+
+            </label>
+
+
+            <label>
+
+                タイトル
+
+                <input
+                    id="title"
+                    type="text"
+                    required
+                >
+
+            </label>
+
+
+            <label>
+
+                著者・編者
+
+                <input
+                    id="author"
+                    type="text"
+                >
+
+            </label>
+
+
+            <label>
+
+                出版年
+
+                <input
+                    id="year"
+                    type="text"
+                >
+
+            </label>
+
+
+            <label>
+
+                出版社
+
+                <input
+                    id="publisher"
+                    type="text"
+                >
+
+            </label>
+
+
+            <label>
+
+                書影URL
+
+                <input
+                    id="coverUrl"
+                    type="url"
+                    placeholder="https://..."
+                >
+
+            </label>
+
+
+            <label>
+
+                ラベル
+
+                <select id="bookLabel">
+
+                </select>
+
+            </label>
+
+
+            <div class="new-label-area">
+
+                <input
+                    id="newLabel"
+                    type="text"
+                    placeholder="新しいラベル"
+                >
+
+                <button
+                    id="addLabelButton"
+                    type="button"
+                >
+                    追加
+                </button>
+
+            </div>
+
+
+            <button
+                id="saveBookButton"
+                type="submit"
+                class="primary-button"
+            >
+                保存
+            </button>
+
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     詳細
+===================================================== -->
+
+<div
+    id="detailModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            data-close="detailModal"
+        >
+            ×
+        </button>
+
+        <div id="detailContent"></div>
+
+        <div class="detail-buttons">
+
+            <button
+                id="editButton"
+                type="button"
+            >
+                編集
+            </button>
+
+            <button
+                id="deleteButton"
+                type="button"
+                class="danger-button"
+            >
+                削除
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ラベル管理
+===================================================== -->
+
+<div
+    id="labelManagerModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="modal-close"
+            data-close="labelManagerModal"
+        >
+            ×
+        </button>
+
+        <h2>ラベル管理</h2>
+
+        <div id="labelManagerList"></div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     ラベル編集
+===================================================== -->
+
+<div
+    id="labelEditModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content small">
+
+        <button
+            class="modal-close"
+            data-close="labelEditModal"
+        >
+            ×
+        </button>
+
+        <h2>ラベルを編集</h2>
+
+        <input
+            id="editLabelInput"
+            type="text"
+        >
+
+        <button
+            id="saveLabelEditButton"
+            type="button"
+            class="primary-button"
+        >
+            保存
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================================
+     バーコードスキャナー
+===================================================== -->
+
+<div
+    id="scannerModal"
+    class="modal hidden"
+>
+
+    <div class="modal-content scanner-content">
+
+        <button
+            class="modal-close"
+            data-close="scannerModal"
+        >
+            ×
+        </button>
+
+        <h2>📷 ISBNを読み取る</h2>
+
+        <p id="scannerMessage">
+            スキャナーを起動しています…
+        </p>
+
+        <div class="scanner-frame">
+
+            <video
+                id="scannerVideo"
+                autoplay
+                muted
+                playsinline
+            ></video>
+
+            <div class="scanner-line"></div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="apps.js"></script>
+
+</body>
+
+</html>
