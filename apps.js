@@ -409,12 +409,32 @@ function refreshLabelControls() {
     const currentFilter =
         labelFilter.value;
 
-    labelFilter.innerHTML =
-        `
-        <option value="">
-            すべてのラベル
-        </option>
-        `;
+    /*
+     * ラベルフィルター
+     */
+
+    labelFilter.innerHTML = "";
+
+    /*
+     * すべてのラベル
+     */
+
+    const allOption =
+        document.createElement("option");
+
+    allOption.value = "";
+
+    allOption.textContent =
+        "すべてのラベル";
+
+    labelFilter.appendChild(
+        allOption
+    );
+
+
+    /*
+     * 各ラベル
+     */
 
     labels.forEach(
         label => {
@@ -438,6 +458,45 @@ function refreshLabelControls() {
     );
 
 
+    /*
+     * ラベル編集
+     */
+
+    const separator =
+        document.createElement(
+            "option"
+        );
+
+    separator.disabled = true;
+
+    separator.textContent =
+        "────────────";
+
+    labelFilter.appendChild(
+        separator
+    );
+
+
+    const editOption =
+        document.createElement(
+            "option"
+        );
+
+    editOption.value =
+        "__EDIT_LABELS__";
+
+    editOption.textContent =
+        "⚙ ラベル編集";
+
+    labelFilter.appendChild(
+        editOption
+    );
+
+
+    /*
+     * 以前選択していたラベルを復元
+     */
+
     if (
         labels.includes(
             currentFilter
@@ -447,12 +506,20 @@ function refreshLabelControls() {
         labelFilter.value =
             currentFilter;
 
+    } else {
+
+        labelFilter.value =
+            "";
+
     }
 
 
+    /*
+     * 本登録フォームのラベル選択
+     */
+
     bookLabel.innerHTML =
         "";
-
 
     labels.forEach(
         label => {
@@ -2084,9 +2151,53 @@ searchInput.addEventListener(
 );
 
 
+/* =========================================================
+   ラベルフィルター
+========================================================= */
+
 labelFilter.addEventListener(
     "change",
-    renderBooks
+    event => {
+
+        /*
+         * 「ラベル編集」が選択された場合
+         */
+
+        if (
+            event.target.value ===
+            "__EDIT_LABELS__"
+        ) {
+
+            /*
+             * フィルターを
+             * 「すべてのラベル」に戻す
+             */
+
+            labelFilter.value = "";
+
+
+            /*
+             * ラベル編集画面を表示
+             */
+
+            renderLabelManager();
+
+            showModal(
+                labelManagerModal
+            );
+
+            return;
+
+        }
+
+
+        /*
+         * 通常のラベル選択
+         */
+
+        renderBooks();
+
+    }
 );
 
 
