@@ -48,6 +48,11 @@ const labelFilter =
         "labelFilter"
     );
 
+const bookCount =
+    document.getElementById(
+        "bookCount"
+    );
+
 const addButton =
     document.getElementById(
         "addButton"
@@ -425,7 +430,7 @@ function refreshLabelControls() {
     allOption.value = "";
 
     allOption.textContent =
-        "すべてのラベル";
+    "すべてのラベル";
 
     labelFilter.appendChild(
         allOption
@@ -437,25 +442,38 @@ function refreshLabelControls() {
      */
 
     labels.forEach(
-        label => {
+    label => {
 
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                label;
-
-            option.textContent =
-                label;
-
-            labelFilter.appendChild(
-                option
+        const option =
+            document.createElement(
+                "option"
             );
 
-        }
-    );
+        option.value =
+            label;
+
+
+        const count =
+            books.filter(
+                book =>
+                    (
+                        book.label ||
+                        "未分類"
+                    ) ===
+                    label
+            ).length;
+
+
+        option.textContent =
+            `${label}（${count}冊）`;
+
+
+        labelFilter.appendChild(
+            option
+        );
+
+    }
+);
 
 
     /*
@@ -541,6 +559,15 @@ function refreshLabelControls() {
 
         }
     );
+
+    /* 総冊数 */
+
+if (bookCount) {
+
+    bookCount.textContent =
+        ` 📚 ${books.length}冊`;
+
+}
 
 }
 
