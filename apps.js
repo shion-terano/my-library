@@ -1034,22 +1034,69 @@ async function fetchBookFromNDL(
             );
 
 
-        const item =
-            xml.querySelector(
-                "item"
+const items =
+    Array.from(
+        xml.getElementsByTagName(
+            "item"
+        )
+    );
+
+
+if (items.length === 0) {
+
+    alert(
+        "国立国会図書館サーチから書誌情報を取得できませんでした。\n" +
+        "手入力してください。"
+    );
+
+    return;
+
+}
+
+
+/*
+ * 同じISBNに複数の書誌レコードが
+ * 返ってくることがあるため、
+ * タイトルが一番長い(＝正題＋副題を
+ * 含んでいる可能性が高い)レコードを採用する
+ */
+
+let item =
+    items[0];
+
+
+let bestTitleLength =
+    getElementText(
+        item,
+        "title"
+    ).length;
+
+
+items.forEach(
+    candidate => {
+
+        const candidateTitle =
+            getElementText(
+                candidate,
+                "title"
             );
 
 
-        if (!item) {
+        if (
+            candidateTitle.length >
+            bestTitleLength
+        ) {
 
-            alert(
-                "国立国会図書館サーチから書誌情報を取得できませんでした。\n" +
-                "手入力してください。"
-            );
+            item =
+                candidate;
 
-            return;
+            bestTitleLength =
+                candidateTitle.length;
 
         }
+
+    }
+);
 
 
         /* =================================================
