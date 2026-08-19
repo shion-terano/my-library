@@ -1000,7 +1000,7 @@ async function fetchBookFromNDL(
             encodeURIComponent(
                 cleanISBN
             ) +
-            "&cnt=1";
+            "&cnt=5";
 
 
         const response =
