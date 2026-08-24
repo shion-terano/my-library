@@ -311,10 +311,13 @@ function normalizeBook(
             ),
 
         label:
-            String(
-                book.label ||
-                "未分類"
-            )
+    String(
+        book.label ||
+        "00_未分類"
+    ).replace(
+        /^未分類$/,
+        "00_未分類"
+    )
 
     };
 
@@ -378,7 +381,7 @@ function rebuildLabels() {
 
     const set =
         new Set(
-            ["未分類"]
+            ["00_未分類"]
         );
 
     books.forEach(
@@ -389,7 +392,12 @@ function rebuildLabels() {
             ) {
 
                 set.add(
-                    book.label
+                    book.label ===
+                    "未分類"
+                        ?
+                        "00_未分類"
+                        :
+                        book.label
                 );
 
             }
@@ -441,7 +449,55 @@ function refreshLabelControls() {
      * 各ラベル
      */
 
-    labels.forEach(
+const sortedLabels =
+    [...labels].sort(
+        (a, b) => {
+
+            /*
+             * 00_未分類は常に先頭
+             */
+
+            if (
+                a === "00_未分類"
+            ) {
+
+                return -1;
+
+            }
+
+            if (
+                b === "00_未分類"
+            ) {
+
+                return 1;
+
+            }
+
+
+            /*
+             * ラベル先頭の番号を取得
+             */
+
+            const numA =
+                parseInt(
+                    a.split("_")[0],
+                    10
+                ) || 999999;
+
+
+            const numB =
+                parseInt(
+                    b.split("_")[0],
+                    10
+                ) || 999999;
+
+
+            return numA - numB;
+
+        }
+    );
+
+    sortedLabels.forEach(
     label => {
 
         const option =
@@ -1772,8 +1828,8 @@ function openBookForm(
 
 
     bookLabel.value =
-        book?.label ||
-        "未分類";
+book?.label ||
+"00_未分類";
 
 
     showModal(
@@ -2112,14 +2168,14 @@ function renderLabelManager() {
 
 
             if (
-                label ===
-                "未分類"
-            ) {
+    label ===
+    "00_未分類"
+) {
 
-                button.disabled =
-                    true;
+    button.disabled =
+        true;
 
-            } else {
+} else {
 
                 button.addEventListener(
                     "click",
