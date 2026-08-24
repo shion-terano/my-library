@@ -2134,7 +2134,56 @@ function renderLabelManager() {
         "";
 
 
-    labels.forEach(
+    const sortedLabels =
+        [...labels].sort(
+            (a, b) => {
+
+                /*
+                 * 00_未分類は常に先頭
+                 */
+
+                if (
+                    a === "00_未分類"
+                ) {
+
+                    return -1;
+
+                }
+
+                if (
+                    b === "00_未分類"
+                ) {
+
+                    return 1;
+
+                }
+
+
+                /*
+                 * ラベル先頭の番号で並べ替え
+                 */
+
+                const numA =
+                    parseInt(
+                        a.split("_")[0],
+                        10
+                    ) || 999999;
+
+
+                const numB =
+                    parseInt(
+                        b.split("_")[0],
+                        10
+                    ) || 999999;
+
+
+                return numA - numB;
+
+            }
+        );
+
+
+    sortedLabels.forEach(
         label => {
 
             const row =
