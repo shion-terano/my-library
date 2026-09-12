@@ -593,28 +593,28 @@ const sortedLabels =
      */
 
     bookLabel.innerHTML =
-        "";
+    "";
 
-    labels.forEach(
-        label => {
+sortedLabels.forEach(
+    label => {
 
-            const option =
-                document.createElement(
-                    "option"
-                );
-
-            option.value =
-                label;
-
-            option.textContent =
-                label;
-
-            bookLabel.appendChild(
-                option
+        const option =
+            document.createElement(
+                "option"
             );
 
-        }
-    );
+        option.value =
+            label;
+
+        option.textContent =
+            label;
+
+        bookLabel.appendChild(
+            option
+        );
+
+    }
+);
 
     /* 総冊数 */
 
